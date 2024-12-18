@@ -127,50 +127,6 @@ export function SubjectDashboard({ subjectId }: { subjectId: string }) {
           </CardHeader>
         </Card>
       </div>
-
-      <Card className="bg-white shadow-md">
-        <CardHeader>
-          <CardTitle className="flex items-center text-lg text-primary">
-            <File className="mr-2 h-5 w-5" />
-            Archivos de {subject.name}
-          </CardTitle>
-          <CardDescription>Gestiona los archivos de esta materia</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4">
-            <Input
-              type="file"
-              onChange={handleFileUpload}
-              className="hidden"
-              id={`file-upload-${subject.id}`}
-            />
-            <label htmlFor={`file-upload-${subject.id}`}>
-              <Button className="w-full cursor-pointer">
-                <Upload className="mr-2 h-4 w-4" />
-                Subir Archivo
-              </Button>
-            </label>
-          </div>
-          <ScrollArea className="h-[200px]">
-            <ul className="space-y-2">
-              {mockFiles.map((file) => (
-                <li key={file.id} className="flex items-center justify-between p-2 bg-secondary rounded-lg">
-                  <div className="flex items-center">
-                    <File className="h-5 w-5 mr-2 text-primary" />
-                    <span>{file.name}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-sm text-muted-foreground mr-4">{file.size}</span>
-                    <Button variant="ghost" size="sm" onClick={() => handleDelete(file.id)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </ScrollArea>
-        </CardContent>
-      </Card>
     </div>
   )
 }

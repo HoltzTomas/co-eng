@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from 'react'
-import { toast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 
 interface FileUploadProps {
   children: React.ReactNode
@@ -11,6 +11,7 @@ interface FileUploadProps {
 export function FileUpload({ children, subjectId }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { toast } = useToast()
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]

@@ -18,10 +18,10 @@ export function DashboardOptions() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card 
-          className="bg-white shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-          onClick={() => {}}
-        >
+      <Card
+        className="bg-white shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+        onClick={() => { }}
+      >
         <CardHeader>
           <CardTitle className="flex items-center text-lg text-primary">
             <Brain className="mr-2 h-5 w-5" />
@@ -31,52 +31,52 @@ export function DashboardOptions() {
         </CardHeader>
       </Card>
 
-        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogTrigger asChild>
-            <Card 
-              className="bg-white shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={() => {}}
-            >
-              <CardHeader>
-                <CardTitle className="flex items-center text-lg text-primary">
-                  <FileQuestion className="mr-2 h-5 w-5" />
-                  Preguntar sobre PDF
-                </CardTitle>
-                <CardDescription>Haz preguntas sobre un PDF específico</CardDescription>
-              </CardHeader>
-            </Card>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Selecciona un PDF</DialogTitle>
-            </DialogHeader>
-            <Select onValueChange={(value) => {
-              setSelectedPdf(value)
-              setIsModalOpen(false)
-            }}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Elige un PDF" />
-              </SelectTrigger>
-              <SelectContent>
-                {mockFiles.filter(file => file.name.endsWith('.pdf')).map((file) => (
-                  <SelectItem key={file.id} value={file.name}>
-                    {file.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </DialogContent>
-        </Dialog>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogTrigger asChild>
+          <Card
+            className="bg-white shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => { }}
+          >
+            <CardHeader>
+              <CardTitle className="flex items-center text-lg text-primary">
+                <FileQuestion className="mr-2 h-5 w-5" />
+                Preguntar sobre PDF
+              </CardTitle>
+              <CardDescription>Haz preguntas sobre un PDF específico</CardDescription>
+            </CardHeader>
+          </Card>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Selecciona un PDF</DialogTitle>
+          </DialogHeader>
+          <Select onValueChange={(value) => {
+            setSelectedPdf(value)
+            setIsModalOpen(false)
+          }}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Elige un PDF" />
+            </SelectTrigger>
+            <SelectContent>
+              {mockFiles.filter(file => file.name.endsWith('.pdf')).map((file) => (
+                <SelectItem key={file.id} value={file.name}>
+                  {file.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </DialogContent>
+      </Dialog>
 
-        <Card 
-          className="bg-white shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-          onClick={() => {}}
-        >
+      <Card
+        className="bg-white shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+        onClick={() => { }}
+      >
         <CardHeader>
-            <CardTitle className="flex items-center text-lg text-primary">
-              <Calculator className="mr-2 h-5 w-5" />
-              Resolver Ejercicios
-            </CardTitle>
+          <CardTitle className="flex items-center text-lg text-primary">
+            <Calculator className="mr-2 h-5 w-5" />
+            Resolver Ejercicios
+          </CardTitle>
           <CardDescription>Obtén ayuda para resolver problemas y ejercicios</CardDescription>
         </CardHeader>
       </Card>

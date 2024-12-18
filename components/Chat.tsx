@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
-import { Send } from "lucide-react"; // Asegúrate de tener Lucide Icons instalado
+import { Send } from "lucide-react";
+import { Message } from "@/components/message"
 
 const messages = [
     {
@@ -17,7 +18,7 @@ const messages = [
     },
 ];
 
-export default function Chat({ id }: { id: string }) {
+export function Chat({ id }: { id: string }) {
     const [input, setInput] = useState<string>("");
 
     return (
@@ -30,22 +31,7 @@ export default function Chat({ id }: { id: string }) {
             {/* Chat Messages */}
             <ScrollArea className="flex-1 space-y-6 px-2">
                 {messages.map((message, index) => (
-                    <div
-                        key={`${id}-${index}`}
-                        className={`flex ${
-                            message.role === "user" ? "justify-end" : "justify-start"
-                        }`}
-                    >
-                        <div
-                            className={`max-w-[75%] px-4 py-2 rounded-lg text-sm ${
-                                message.role === "user"
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-gray-100 text-gray-800"
-                            } shadow-md`}
-                        >
-                            {message.content}
-                        </div>
-                    </div>
+                    <Message key={`${id}-${index}`} role={message.role} content={message.content} />
                 ))}
             </ScrollArea>
 

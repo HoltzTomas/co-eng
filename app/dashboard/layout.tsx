@@ -1,4 +1,4 @@
-import { Sidebar } from "@/components/Sidebar";
+import { Sidebar } from "@/components/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 const subjects = [
@@ -16,7 +16,7 @@ export default function Layout({
 }>) {
     return (
     <SidebarProvider>
-      <div className="flex flex-col md:flex-row h-screen overflow-hidden">
+      <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden">
         <Sidebar subjects={subjects}/>
         {children}
       </div>

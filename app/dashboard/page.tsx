@@ -1,15 +1,13 @@
 import { DashboardOptions } from "./components/DashboardOptions"
-import { FileUploadButton } from "./components/FileUploadButton"
+import { FileList } from "@/components/file-list"
+import { files } from "@/data/files"
 
 export default function Page() {
   return (
         <main className="flex-1 overflow-auto bg-gray-100">
-          <div className="container mx-auto p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-3xl font-bold">Dashboard de Estudio</h1>
-              <FileUploadButton />
-            </div>
+          <div className="container mx-auto p-6 space-y-4">
             <DashboardOptions />
+            <FileList initialFiles={files} />
           </div>
         </main>
   )
