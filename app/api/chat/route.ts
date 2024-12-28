@@ -1,6 +1,5 @@
-import { AISDKError, APICallError, streamText } from 'ai'
+import { streamText } from 'ai'
 import { providers, ProviderName } from '@/lib/ai-providers'
-import { ApiError } from 'next/dist/server/api-utils'
 
 export const runtime = 'edge'
 
