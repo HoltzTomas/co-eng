@@ -1,6 +1,4 @@
-"use client"
-
-import { Book, Home } from 'lucide-react'
+import { Book, Home, Plus, MoreVertical, Trash } from "lucide-react"
 import Link from 'next/link'
 import {
   Sidebar as ShadcnSidebar,
@@ -10,17 +8,36 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent } from "@/components/ui/dropdown-menu"
 
-type Subject = {
-  id: string,
-  name: string
-}
+import { createSubject, deleteSubject, getSubjects } from "@/lib/db/queries"
+import { auth } from "@/lib/auth"
+import { revalidatePath } from "next/cache"
 
 
-export function Sidebar({ subjects }: {subjects: Subject[]}) {
+export async function Sidebar() {
+  const session = await auth();
+  const userEmail: string = session!.user!.email!;
+  const subjects = await getSubjects(session?.user?.email ?? "");
+
+  const handleAddSubject = async (formData: FormData) => {
+    "use server"
+    const subject: string = formData.get("subject")?.toString().trim() || "";
+    if (!subject) return;
+    await createSubject({name: subject, createdBy: userEmail})
+    revalidatePath("/dashboard");
+  }
+
+  const handleDeleteSubject = async (subjectId: number) => {
+    "use server"
+    await deleteSubject(subjectId);
+    revalidatePath("/dashboard");
+  }
+
   return (
     <ShadcnSidebar className="w-64 border-r border-gray-200">
       <SidebarHeader className="p-4 border-b">
@@ -36,6 +53,20 @@ export function Sidebar({ subjects }: {subjects: Subject[]}) {
           <SidebarGroupLabel className="px-4 py-2 text-sm font-semibold text-gray-600">
             Mis Materias
           </SidebarGroupLabel>
+          <form className="flex items-center px-4 py-2" action={handleAddSubject}>
+            <input
+              type="text"
+              name="subject"
+              placeholder="Nueva Materia"
+              className="flex-1 text-sm border rounded-md px-2 py-1 mr-2"
+              required
+            />
+            <button
+              className="text-sm text-white bg-blue-500 hover:bg-blue-600 rounded-md p-2"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </form>
           <SidebarGroupContent>
             <SidebarMenu>
               {subjects.map((subject) => (
@@ -46,6 +77,23 @@ export function Sidebar({ subjects }: {subjects: Subject[]}) {
                       <span>{subject.name}</span>
                     </SidebarMenuButton>
                   </Link>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuAction>
+                        <MoreVertical className="h-4 w-4" />
+                      </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem asChild>
+                        <form action={handleDeleteSubject.bind(null, subject.id)}>
+                          <button className="flex w-full items-center text-red-600">
+                            <Trash className="mr-2 h-4 w-4" />
+                            Delete
+                          </button>
+                        </form>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu> 
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
