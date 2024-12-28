@@ -24,7 +24,11 @@ export function Chat({ id }: { id: string }) {
             <ScrollArea className="flex-1 space-y-6 px-2 pb-5">
                 {messages.map((message, index) => (
                     <Message key={`${id}-${index}`} role={message.role}>
-                        <Typewriter text={message.content} speed={50} />
+                        {message.role === "assistant" ? (
+                            <Typewriter text={message.content} />
+                        ) : (
+                            message.content
+                        )}
                     </Message>
                 ))}
                 {error && (
