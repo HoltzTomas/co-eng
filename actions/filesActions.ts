@@ -2,6 +2,7 @@
 
 import pdfParse from "pdf-parse"
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter"
+import { google } from "@ai-sdk/google"
 import { openai } from "@ai-sdk/openai"
 import { embedMany } from "ai"
 
@@ -18,24 +19,21 @@ export async function uploadFile(data: FormData) {
 
     const pdfBuffer = Buffer.from(await file.arrayBuffer());
     const pdfContent = (await pdfParse(pdfBuffer)).text;
-    console.log(pdfContent);
 
     const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 })
 
     const chunkedContent = await textSplitter.createDocuments([pdfContent]);
 
-    console.log(chunkedContent);
 
-    /*
     const { embeddings } = await embedMany({
-        model: openai.embedding("text-embedding-3-small"),
+        model: google.embedding("text-embedding-004"),
         values: chunkedContent.map((chunk) => chunk.pageContent),
     })
-    */
+    console.log(embeddings);
+
 
     const createdFile = await createFile(fileInfo);
 
-    /*
     const chunks: Chunk[] = chunkedContent.map((chunk, index) => ({
         content: chunk.pageContent,
         embedding: embeddings[index],
@@ -44,7 +42,6 @@ export async function uploadFile(data: FormData) {
     }))
 
     await insertChunks(chunks);
-    */
     revalidatePath("/dashboard")
 }
 
