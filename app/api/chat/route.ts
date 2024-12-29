@@ -11,7 +11,6 @@ export async function POST(req: Request) {
     return new Response('Invalid provider', { status: 400 })
   }
   
-
   const result = streamText({
       model: selectedProvider,
       messages,

@@ -15,7 +15,8 @@ import Typewriter from "@/components/ui/text-animations";
 
 export function ChatWithFiles({ files }: { files: File[] }) {
   const { messages, input, handleInputChange, handleSubmit, error, reload, isLoading } = useChat({
-    body: { provider: 'gemini' }
+    body: { filesid: files.map((file) => file.id) },
+    api: '/api/ask-documents',
   });
   const [isFileModalOpen, setIsFileModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);

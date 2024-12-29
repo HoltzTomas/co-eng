@@ -11,7 +11,7 @@
     "db:stop": "docker-compose down",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "pnpx tsx lib/db/migrate.ts",
-    "db:studio": "drizzle-kit studio",
+    "db:studio": "drizzle-kit studio --port 4983",
     "db:check": "drizzle-kit check"
   },
   "dependencies": {
