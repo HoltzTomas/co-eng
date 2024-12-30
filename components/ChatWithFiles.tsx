@@ -40,6 +40,11 @@ export function ChatWithFiles({ files }: { files: File[] }) {
             )}
           </Message>
         ))}
+        {isLoading && ( // Mostrar mensaje de carga
+          <Message key={`loading-message`} role="system">
+            Leyendo archivo, esto puede tomar unos segundos...
+          </Message>
+        )}
         {error && (
           <Message key={`error-message`} role="system">
             <div className="flex items-center gap-2">
