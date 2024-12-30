@@ -58,6 +58,16 @@ export function FileList({ initialFiles }: { initialFiles: File[] }) {
           </TableRow>
         </TableHeader>
         <TableBody>
+          {optimisticFiles.length === 0 && 
+            <TableRow
+            key={"emptyFiles"}
+            className="cursor-pointer"
+          >
+            <TableCell className="flex items-center gap-2 font-medium">
+                Ingrese material teorico para empezar a estudiar
+              </TableCell>
+          </TableRow>
+          }
           {optimisticFiles.map((file) => (
             <TableRow
               key={file.id}

@@ -10,7 +10,7 @@ export function DashboardOptions({ subject }: { subject?: Subject }) {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-primary">Dashboard {subject && `de ${subject.name}`}</h1>
+      <h1 className="text-3xl font-bold text-primary">{subject!.name}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card
           className="bg-white shadow-md hover:shadow-lg transition-shadow cursor-pointer"
@@ -18,7 +18,7 @@ export function DashboardOptions({ subject }: { subject?: Subject }) {
           <CardHeader>
             <CardTitle className="flex items-center text-lg text-primary">
               <Brain className="mr-2 h-5 w-5" />
-              Crear Quiz con IA
+              Crear Quiz
             </CardTitle>
             <CardDescription>Genera un cuestionario personalizado{subject && ` sobre ${subject.name}`}</CardDescription>
           </CardHeader>
