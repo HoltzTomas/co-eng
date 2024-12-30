@@ -19,7 +19,6 @@ import { createSubject, deleteSubject, getSubjects } from "@/lib/db/queries"
 import { revalidatePath } from "next/cache"
 import { currentUser } from '@clerk/nextjs/server'
 import { SignOutButton } from "@clerk/nextjs"
-import { LogOut } from 'lucide-react'
 
 
 export async function Sidebar() {
