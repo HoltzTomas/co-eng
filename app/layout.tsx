@@ -1,20 +1,17 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { Metadata } from 'next/types';
 
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'AI Study Companion',
-  description: 'Empower your learning with AI',
-}
+export const metadata: Metadata = {
+  title: "Co-Eng",
+  description: "co-eng",
+};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en">
       <ClerkProvider>
