@@ -1,15 +1,13 @@
 import { getFilesBySubjectId, getSubjectById } from "@/lib/db/queries"
 import { DashboardOptions } from "@/components/dashboard-options"
 import { FileList } from "@/components/file-list"
-import { auth } from "@/lib/auth";
 import { UploadButton } from "@/components/upload-button";
 import { redirect } from "next/navigation";
+import { currentUser } from '@clerk/nextjs/server'
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = await params
-
-  const session = await auth();
-  if (!session || !session.user || !session.user.email)  redirect("/login");
+  const user = await currentUser()
 
   const subject = await getSubjectById(Number(id));
   if (!subject) redirect("/dashboard");
@@ -23,7 +21,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold">Mis archivos</h2>
-            <UploadButton subjectId={id} userEmail={session.user.email} />
+            <UploadButton subjectId={id} userEmail={user?.emailAddresses[0].emailAddress ?? ""} />
           </div>
           <FileList initialFiles={initialFiles} />
         </div>

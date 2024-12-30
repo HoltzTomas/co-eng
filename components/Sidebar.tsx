@@ -15,14 +15,14 @@ import {
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent } from "@/components/ui/dropdown-menu"
 
 import { createSubject, deleteSubject, getSubjects } from "@/lib/db/queries"
-import { auth } from "@/lib/auth"
 import { revalidatePath } from "next/cache"
+import { currentUser } from '@clerk/nextjs/server'
 
 
 export async function Sidebar() {
-  const session = await auth();
-  const userEmail: string = session!.user!.email!;
-  const subjects = await getSubjects(session?.user?.email ?? "");
+  const user = await currentUser()
+  const userEmail: string = user!.emailAddresses[0].emailAddress!;
+  const subjects = await getSubjects(userEmail);
 
   const handleAddSubject = async (formData: FormData) => {
     "use server"
