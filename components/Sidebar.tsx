@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -17,6 +18,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuConten
 import { createSubject, deleteSubject, getSubjects } from "@/lib/db/queries"
 import { revalidatePath } from "next/cache"
 import { currentUser } from '@clerk/nextjs/server'
+import { SignOutButton } from "@clerk/nextjs"
+import { LogOut } from 'lucide-react'
 
 
 export async function Sidebar() {
@@ -100,6 +103,9 @@ export async function Sidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="pb-4">
+        <SignOutButton>Cerrar sesión</SignOutButton>
+      </SidebarFooter>
     </ShadcnSidebar>
   )
 }
