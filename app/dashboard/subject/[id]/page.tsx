@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <DashboardOptions subject={subject} />
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Mis archivos</h2>
+            <h2 className="text-lg font-semibold">Material teorico</h2>
             <UploadButton subjectId={id} userEmail={user?.emailAddresses[0].emailAddress ?? ""} />
           </div>
           <FileList initialFiles={initialFiles} />

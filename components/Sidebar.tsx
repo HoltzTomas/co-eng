@@ -42,13 +42,9 @@ export async function Sidebar() {
 
   return (
     <ShadcnSidebar className="w-64 border-r border-gray-200">
-      <SidebarHeader className="p-4 border-b">
-        <Link href="/dashboard" passHref>
-          <SidebarMenuButton className="flex items-center w-full text-sm hover:bg-gray-100">
+      <SidebarHeader className="p-4 border-b flex flex-row">
             <Home className="mr-2 h-4 w-4" />
-            <span>Dashboard Principal</span>
-          </SidebarMenuButton>
-        </Link>
+            <span>Co - Eng</span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
