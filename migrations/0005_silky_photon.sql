@@ -1,1 +1,0 @@
-ALTER TABLE "chunk" ALTER COLUMN "chunk_number" SET DATA TYPE integer;

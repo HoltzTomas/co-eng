@@ -1,16 +1,25 @@
 CREATE TABLE "chunk" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"file_id" serial NOT NULL,
-	"chunk_number" serial NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"file_id" uuid NOT NULL,
+	"chunk_number" integer NOT NULL,
 	"content" text NOT NULL,
 	"embedding" real[] NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "files" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
-	"subject_id" serial NOT NULL,
+	"subject_id" uuid NOT NULL,
+	"size" integer NOT NULL,
+	"user_id" text NOT NULL,
 	"created_by" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "subjects" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" text NOT NULL,
+	"user_id" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint

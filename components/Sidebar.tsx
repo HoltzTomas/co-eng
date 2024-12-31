@@ -1,5 +1,8 @@
 import { Book, Home, Plus, MoreVertical, Trash } from "lucide-react"
 import Link from 'next/link'
+import { revalidatePath } from "next/cache"
+import { currentUser } from '@clerk/nextjs/server'
+import { SignOutButton } from "@clerk/nextjs"
 import {
   Sidebar as ShadcnSidebar,
   SidebarContent,
@@ -16,25 +19,22 @@ import {
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent } from "@/components/ui/dropdown-menu"
 
 import { createSubject, deleteSubject, getSubjects } from "@/lib/db/queries"
-import { revalidatePath } from "next/cache"
-import { currentUser } from '@clerk/nextjs/server'
-import { SignOutButton } from "@clerk/nextjs"
 
 
 export async function Sidebar() {
   const user = await currentUser()
-  const userEmail: string = user!.emailAddresses[0].emailAddress!;
-  const subjects = await getSubjects(userEmail);
+  const userId: string = user!.id;
+  const subjects = await getSubjects(userId);
 
   const handleAddSubject = async (formData: FormData) => {
     "use server"
     const subject: string = formData.get("subject")?.toString().trim() || "";
     if (!subject) return;
-    await createSubject({name: subject, createdBy: userEmail})
+    await createSubject({name: subject, userId: userId});
     revalidatePath("/dashboard");
   }
 
-  const handleDeleteSubject = async (subjectId: number) => {
+  const handleDeleteSubject = async (subjectId: string) => {
     "use server"
     await deleteSubject(subjectId);
     revalidatePath("/dashboard");

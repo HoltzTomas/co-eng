@@ -1,6 +1,5 @@
 "use client"
-import { useOptimistic, useState } from "react"
-import { FileText, MoreVertical, Trash, ChevronUp, ChevronDown } from 'lucide-react'
+import { FileText, MoreVertical, Trash } from 'lucide-react'
 
 import { File } from "@/lib/db/types"
 import {
@@ -20,9 +19,7 @@ import {
 import { toast } from "@/hooks/use-toast"
 import { deleteFile } from "@/actions/filesActions"
 
-export function FileList({ initialFiles }: { initialFiles: File[] }) {
-  const [optimisticFiles, addOptimisticFile] = useOptimistic(initialFiles, (state, newFile: File) => [newFile, ...state])
-
+export function FileList({ files }: { files: File[] }) {
   const handleDoubleClick = (file: File) => {
     console.log("Opening file:", file.name)
     // Implementation would go here
@@ -58,17 +55,17 @@ export function FileList({ initialFiles }: { initialFiles: File[] }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {optimisticFiles.length === 0 && 
+          {files.length === 0 &&
             <TableRow
-            key={"emptyFiles"}
-            className="cursor-pointer"
-          >
-            <TableCell className="flex items-center gap-2 font-medium">
+              key={"emptyFiles"}
+              className="cursor-pointer"
+            >
+              <TableCell className="flex items-center gap-2 font-medium">
                 Ingrese material teorico para empezar a estudiar
               </TableCell>
-          </TableRow>
+            </TableRow>
           }
-          {optimisticFiles.map((file) => (
+          {files.map((file) => (
             <TableRow
               key={file.id}
               onDoubleClick={() => handleDoubleClick(file)}
@@ -78,7 +75,7 @@ export function FileList({ initialFiles }: { initialFiles: File[] }) {
                 <FileText className="h-5 w-5 text-red-500" />
                 {file.name}
               </TableCell>
-              <TableCell>{file.size.toPrecision(2)}MB</TableCell>
+              <TableCell>{(file.size / (1024 * 1024)).toFixed(2)}MB</TableCell>
               <TableCell>{file.createdAt?.toDateString() || "--/--/----"}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -94,7 +91,7 @@ export function FileList({ initialFiles }: { initialFiles: File[] }) {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
                       className="text-destructive focus:text-destructive"
-                      onClick={() => handleDelete(file)}
+                      onClick={async () => await handleDelete(file)}
                     >
                       <Trash className="mr-2 h-4 w-4" />
                       Eliminar

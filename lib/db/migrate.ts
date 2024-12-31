@@ -6,10 +6,13 @@ import postgres from "postgres";
 config({ path: ".env.local" });
 
 async function runMigrate() {
-  if (!process.env.POSTGRES_URL)
-    throw new Error("POSTGRES_URL is not defined");
+  const connectionString = process.env.DATABASE_URL;
 
-  const connection = postgres(process.env.POSTGRES_URL, { max: 1 });
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not defined");
+  }
+
+  const connection = postgres(connectionString, { max: 1 });
   const db = drizzle(connection);
 
   console.log("Running migrattions...");
