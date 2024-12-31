@@ -1,5 +1,5 @@
 "use server"
-import { eq, asc } from 'drizzle-orm';
+import { eq, asc, inArray, sql } from 'drizzle-orm';
 import { db } from './db';
 import { subjects, files, chunk } from './schema';
 import { Subject, File, Chunk } from './types';
@@ -64,6 +64,14 @@ export async function getSubjectWithFiles(id: string) {
   return subjectWithFiles;
 }
 
+export async function getFilesById(ids: string[]) {
+  const filesList = await db
+    .select()
+    .from(files)
+    .where(inArray(files.id, ids));
+  return filesList;
+}
+
 export async function getFilesBySubjectId(id: string) {
   const filesList = await db
     .select()
@@ -102,6 +110,16 @@ export async function getChunksByFileId(id: string) {
     .from(chunk)
     .where(eq(chunk.fileId, id))
     .orderBy(asc(chunk.chunkNumber));
+  return chunksList;
+}
+
+export async function getRandomChunksByFileId(id: number, limit: number) {
+  const chunksList = await db
+    .select()
+    .from(chunk)
+    .where(eq(chunk.fileId, id))
+    .orderBy(sql`RANDOM()`)
+    .limit(limit);
   return chunksList;
 }
 
