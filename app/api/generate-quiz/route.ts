@@ -17,15 +17,10 @@ export async function POST(req: Request) {
     chunks.push(fileChunks.map((chunk) => chunk.content).join(" - CHUNK CHANGE - "));
   }
 
-  console.log(chunks);
-
   const documents: CoreMessage[] = chunks.map((chunk) => ({ 
     role: "system", 
     content: "File: " + chunk 
   }));
-
-  
-  
 
   const result = streamObject({
     model: google("gemini-1.5-pro-latest"),
