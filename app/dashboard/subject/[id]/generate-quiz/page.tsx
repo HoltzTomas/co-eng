@@ -1,10 +1,9 @@
 import Quiz from "@/components/quiz";
-import QuizOptions from "@/components/quiz-options";
 import { getFilesBySubjectId } from "@/lib/db/queries";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const { id } = await params;
-    const files = await getFilesBySubjectId(Number(id));
+    const files = await getFilesBySubjectId(id);
 
     return (
         <main className="flex-1 overflow-auto bg-gray-100">
