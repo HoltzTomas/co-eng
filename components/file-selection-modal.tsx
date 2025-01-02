@@ -4,15 +4,17 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Checkbox } from "@/components/ui/checkbox"
 import { File } from '@/lib/db/types'
+import { UploadButton } from './upload-button'
 
 type FileSelectionModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onFilesSelect: (files: File[]) => void;
-  files: File[]
+  files: File[],
+  subject: string
 }
 
-export function FileSelectionModal({ isOpen, onClose, onFilesSelect, files }: FileSelectionModalProps) {
+export function FileSelectionModal({ isOpen, onClose, onFilesSelect, files, subject }: FileSelectionModalProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const handleSelectFile = (file: File) => {
@@ -57,6 +59,9 @@ export function FileSelectionModal({ isOpen, onClose, onFilesSelect, files }: Fi
                 </label>
               </div>
             ))}
+            <div className="flex items-center justify-center">
+              <UploadButton subjectId={subject} />
+            </div>
           </div>
         </ScrollArea>
         <DialogFooter>
