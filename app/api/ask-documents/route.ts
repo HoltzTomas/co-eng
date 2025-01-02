@@ -14,7 +14,7 @@ type ChunkSimilarity = {
 }
 
 export async function POST(req: Request) {
-  const { messages, filesid }: { messages: Message[], filesid: number[] } = await req.json()
+  const { messages, filesid }: { messages: Message[], filesid: string[] } = await req.json()
 
   const tempResponse = await generateText({
     model: providers.gemini,

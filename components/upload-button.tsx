@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { useUser } from '@clerk/nextjs'
 import { Upload } from 'lucide-react'
 
 import { uploadFile } from '@/actions/filesActions'
@@ -8,19 +9,21 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/hooks/use-toast'
 import { File as FileInfo } from '@/lib/db/types'
 
-export function UploadButton({ subjectId, userEmail }: { subjectId: string, userEmail: string }) {
+export function UploadButton({ subjectId }: { subjectId: string }) {
   const [isUploading, setIsUploading] = useState(false)
+  const { user } = useUser()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function handleUpload(file: File) {
     setIsUploading(true)
 
     const fileInfo: FileInfo = {
-        name: file.name,
-        size: file.size / (1024 * 1024), // Convert to MB
-        subjectId: Number(subjectId),
-        createdBy: userEmail
-      }
+      name: file.name,
+      size: file.size,
+      subjectId: subjectId,
+      createdBy: user!.emailAddresses[0].emailAddress,
+      userId: user!.id
+    }
 
     const formData = new FormData()
     formData.append("file", file)

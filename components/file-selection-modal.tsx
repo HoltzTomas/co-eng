@@ -16,7 +16,7 @@ export function FileSelectionModal({ isOpen, onClose, onFilesSelect, files }: Fi
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const handleSelectFile = (file: File) => {
-    setSelectedFiles(prev => 
+    setSelectedFiles(prev =>
       prev.some(f => f.id === file.id)
         ? prev.filter(f => f.id !== file.id)
         : [...prev, file]
@@ -52,7 +52,7 @@ export function FileSelectionModal({ isOpen, onClose, onFilesSelect, files }: Fi
                 >
                   <h3 className="font-medium">{file.name}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Size: {file.size.toFixed(1)} MB | Created: {file.createdAt!.toLocaleDateString()}
+                    Size: {(file.size / (1024 * 1024)).toFixed(2)} MB | Created: {file.createdAt!.toLocaleDateString()}
                   </p>
                 </label>
               </div>

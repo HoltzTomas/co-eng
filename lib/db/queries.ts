@@ -12,15 +12,15 @@ export async function createSubject(subject: Subject) {
   return createdSubject;
 }
 
-export async function getSubjects(userEmail: string) {
+export async function getSubjects(userId: string) {
   const subjectsList = await db
     .select()
     .from(subjects)
-    .where(eq(subjects.createdBy, userEmail));
+    .where(eq(subjects.userId, userId));
   return subjectsList;
 }
 
-export async function getSubjectById(id: number) {
+export async function getSubjectById(id: string) {
   const [subject] = await db
     .select()
     .from(subjects)
@@ -28,7 +28,43 @@ export async function getSubjectById(id: number) {
   return subject;
 }
 
-export async function getFilesById(ids: number[]) {
+export async function getSubjectWithFiles(id: string) {
+  const result = await db
+    .select({
+      subject: subjects,
+      file: files,
+    })
+    .from(subjects)
+    .leftJoin(files, eq(files.subjectId, subjects.id))
+    .where(eq(subjects.id, id));
+
+  if (result.length === 0) {
+    return null;
+  }
+
+  const subjectWithFiles = {
+    id: result[0].subject.id,
+    name: result[0].subject.name,
+    userId: result[0].subject.userId,
+    createdAt: result[0].subject.createdAt,
+    files: result
+      .map(row => row.file)
+      .filter(file => file !== null)
+      .map(file => ({
+        id: file.id,
+        name: file.name,
+        size: file.size,
+        userId: file.userId,
+        subjectId: file.subjectId,
+        createdBy: file.createdBy,
+        createdAt: file.createdAt,
+      })),
+  };
+
+  return subjectWithFiles;
+}
+
+export async function getFilesById(ids: string[]) {
   const filesList = await db
     .select()
     .from(files)
@@ -36,7 +72,7 @@ export async function getFilesById(ids: number[]) {
   return filesList;
 }
 
-export async function getFilesBySubjectId(id: number) {
+export async function getFilesBySubjectId(id: string) {
   const filesList = await db
     .select()
     .from(files)
@@ -44,11 +80,11 @@ export async function getFilesBySubjectId(id: number) {
   return filesList;
 }
 
-export async function getFilesByUserEmail(userEmail: string) {
+export async function getFilesByUserId(userId: string) {
   const filesList = await db
     .select()
     .from(files)
-    .where(eq(files.createdBy, userEmail));
+    .where(eq(files.userId, userId));
   return filesList;
 }
 
@@ -68,7 +104,7 @@ export async function insertChunks(chunks: Chunk[]) {
   return createdChunks;
 }
 
-export async function getChunksByFileId(id: number) {
+export async function getChunksByFileId(id: string) {
   const chunksList = await db
     .select()
     .from(chunk)
@@ -88,19 +124,19 @@ export async function getRandomChunksByFileId(id: number, limit: number) {
 }
 
 
-export async function deleteFile(id: number) {
+export async function deleteFile(id: string) {
   await db
     .delete(files)
     .where(eq(files.id, id));
 }
 
-export async function deleteSubject(id: number) {
+export async function deleteSubject(id: string) {
   await db
     .delete(subjects)
     .where(eq(subjects.id, id));
 }
 
-export async function deleteChunksByFileId(id: number) {
+export async function deleteChunksByFileId(id: string) {
   await db
     .delete(chunk)
     .where(eq(chunk.fileId, id));

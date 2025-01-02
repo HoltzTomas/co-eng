@@ -1,1 +1,0 @@
-ALTER TABLE "files" ALTER COLUMN "subject_id" SET DATA TYPE integer;
