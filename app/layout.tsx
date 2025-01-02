@@ -7,8 +7,8 @@ import { Metadata } from 'next/types';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Co-Eng",
-  description: "co-eng",
+  title: "Notes Studio",
+  description: "Potencia tus apuntes con herramientas de AI y beneficiate de compartirlos",
 };
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
@@ -22,3 +22,4 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
     </html>
   );
 }
+
