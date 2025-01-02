@@ -113,7 +113,7 @@ export async function getChunksByFileId(id: string) {
   return chunksList;
 }
 
-export async function getRandomChunksByFileId(id: number, limit: number) {
+export async function getRandomChunksByFileId(id: string, limit: number) {
   const chunksList = await db
     .select()
     .from(chunk)
