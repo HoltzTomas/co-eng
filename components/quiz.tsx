@@ -12,7 +12,7 @@ import { Card } from "./ui/card";
 import { Progress } from "./ui/progress";
 import { motion } from "framer-motion";
 
-export default function Quiz({ files }: { files: File[] }) {
+export default function Quiz({ files, subject }: { files: File[], subject: string }) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [numQuestions, setNumQuestions] = useState(5);
   const { submit, object: partialQuestions, isLoading } = experimental_useObject({
@@ -39,7 +39,7 @@ export default function Quiz({ files }: { files: File[] }) {
 
     return (
       <div className="w-full max-w-md mx-auto space-y-4">
-        <QuizOptions files={files} onSubmit={(data) => {
+        <QuizOptions files={files} subject={subject} onSubmit={(data) => {
           submit(data);
           setNumQuestions(data.numQuestions);
         }} />

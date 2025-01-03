@@ -58,6 +58,7 @@ export async function getSubjectWithFiles(id: string) {
         subjectId: file.subjectId,
         createdBy: file.createdBy,
         createdAt: file.createdAt,
+        url: file.url
       })),
   };
 
@@ -96,6 +97,17 @@ export async function createFile(file: File) {
   return createdFile;
 }
 
+export async function updateFile(file: File) {
+  if (file.id === undefined) {
+    throw new Error('File id is required to update a file');
+  }
+  const [createdFile] = await db
+    .update(files)
+    .set(file)
+    .where(eq(files.id, file.id))
+  return createdFile;
+}
+
 export async function insertChunks(chunks: Chunk[]) {
   const [createdChunks] = await db
     .insert(chunk)
@@ -113,7 +125,7 @@ export async function getChunksByFileId(id: string) {
   return chunksList;
 }
 
-export async function getRandomChunksByFileId(id: number, limit: number) {
+export async function getRandomChunksByFileId(id: string, limit: number) {
   const chunksList = await db
     .select()
     .from(chunk)

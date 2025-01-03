@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react"
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next/types';
+import { Toaster } from '@/components/ui/toaster';
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
       <ClerkProvider>
         <body className={`${inter.className} bg-gradient-to-br from-gray-100 to-gray-200`}>
           {children}
+          <Toaster />
           <Analytics/>
         </body>
       </ClerkProvider>

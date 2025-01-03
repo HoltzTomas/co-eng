@@ -18,16 +18,24 @@ import {
 } from "@/components/ui/table"
 import { toast } from "@/hooks/use-toast"
 import { deleteFile } from "@/actions/filesActions"
+import { useState } from 'react'
+import clsx from 'clsx'
+import { fileViewer } from '@/hooks/use-fileviewer'
 
 export function FileList({ files }: { files: File[] }) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  const handleClick = (file: File) => {
+    setSelectedFile(file);
+  }
+
   const handleDoubleClick = (file: File) => {
-    console.log("Opening file:", file.name)
-    // Implementation would go here
+    fileViewer(file);
   }
 
   const handleDelete = async (file: File) => {
     try {
-      await deleteFile(file.id!);
+      await deleteFile(file);
       toast({
         title: "Éxito",
         description: "Archivo eliminado correctamente.",
@@ -69,11 +77,17 @@ export function FileList({ files }: { files: File[] }) {
             <TableRow
               key={file.id}
               onDoubleClick={() => handleDoubleClick(file)}
-              className="cursor-pointer"
+              onClick={() => handleClick(file)}
+              className={clsx(
+                "cursor-pointer hover:bg-gray-200", {
+                "bg-gray-200": selectedFile?.id === file.id
+              })}
             >
-              <TableCell className="flex items-center gap-2 font-medium">
-                <FileText className="h-5 w-5 text-red-500" />
-                {file.name}
+              <TableCell>
+                <div className="flex items-center gap-2 font-medium">
+                  <FileText className="h-5 w-5 text-red-500" />
+                  {file.name}
+                </div>
               </TableCell>
               <TableCell>{(file.size / (1024 * 1024)).toFixed(2)}MB</TableCell>
               <TableCell>{file.createdAt?.toDateString() || "--/--/----"}</TableCell>

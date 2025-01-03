@@ -10,8 +10,9 @@ export const subjects = pgTable('subjects', {
 export const files = pgTable('files', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   name: text('name').notNull(),
-  subjectId: uuid('subject_id').notNull().references(() => subjects.id),
+  subjectId: uuid('subject_id').notNull().references(() => subjects.id,  { onDelete: 'cascade' }),
   size: integer("size").notNull(),
+  url: text('url'),
   userId: text('user_id').notNull(),  // User id
   createdBy: text('created_by').notNull(),  // Email address
   createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -19,7 +20,7 @@ export const files = pgTable('files', {
 
 export const chunk = pgTable("chunk", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
-  fileId: uuid("file_id").notNull().references(() => files.id),
+  fileId: uuid("file_id").notNull().references(() => files.id,  { onDelete: 'cascade' }),
   chunkNumber: integer("chunk_number").notNull(),
   content: text("content").notNull(),
   embedding: real("embedding").array().notNull(),
