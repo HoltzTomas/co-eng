@@ -51,7 +51,10 @@ export async function uploadFile(data: FormData) {
   revalidatePath("/dashboard")
 }
 
-export async function deleteFile(id: string) {
-  await deleteFileDB(id);
+export async function deleteFile(file: FileInfo) {
+  if (!file.id) throw new Error("File id is required to delete a file");
+  const supabase = await createClient();
+  supabase.storage.from("files").remove([`${file.userId}/${file.id}`]);
+  await deleteFileDB(file.id);
   revalidatePath("/dashboard")
 }

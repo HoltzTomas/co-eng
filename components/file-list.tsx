@@ -35,7 +35,7 @@ export function FileList({ files }: { files: File[] }) {
 
   const handleDelete = async (file: File) => {
     try {
-      await deleteFile(file.id!);
+      await deleteFile(file);
       toast({
         title: "Éxito",
         description: "Archivo eliminado correctamente.",
