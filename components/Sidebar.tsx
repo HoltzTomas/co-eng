@@ -44,7 +44,7 @@ export async function Sidebar() {
     <ShadcnSidebar className="w-64 border-r border-gray-200">
       <SidebarHeader className="p-4 border-b flex flex-row">
             <Home className="mr-2 h-4 w-4" />
-            <span>Co - Eng</span>
+            <span>Notes Studio</span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
