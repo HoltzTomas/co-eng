@@ -117,7 +117,7 @@ export async function getRandomChunksByFileId(id: number, limit: number) {
   const chunksList = await db
     .select()
     .from(chunk)
-    .where(eq(chunk.fileId, id))
+    .where(eq(chunk.fileId, id.toString()))
     .orderBy(sql`RANDOM()`)
     .limit(limit);
   return chunksList;

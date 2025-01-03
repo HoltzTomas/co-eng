@@ -3,6 +3,9 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
+interface Props {
+  className?: string;
+}
 
 export default function LandingPage() {
 

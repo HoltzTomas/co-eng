@@ -1,4 +1,4 @@
-import { getChunksByFileId, getRandomChunksByFileId } from "@/lib/db/queries";
+import {  getRandomChunksByFileId } from "@/lib/db/queries";
 import { questionSchema, questionsSchema } from "@/lib/schemas/quiz";
 import { google } from "@ai-sdk/google";
 import { CoreMessage, streamObject } from "ai";
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   if (filesid.length === 0) return new Response("No files selected", { status: 400 });
   if (numQuestions < 1 || numQuestions > 20) return new Response("Invalid number of questions", { status: 400 });
   
-  let chunks = [];
+  const chunks = [];
   for (const id of filesid) {
     const fileChunks = await getRandomChunksByFileId(id, 10);
     chunks.push(fileChunks.map((chunk) => chunk.content).join(" - CHUNK CHANGE - "));

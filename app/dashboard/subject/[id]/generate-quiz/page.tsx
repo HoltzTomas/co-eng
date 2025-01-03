@@ -1,8 +1,10 @@
 import Quiz from "@/components/quiz";
 import { getFilesBySubjectId } from "@/lib/db/queries";
 
-export default async function Page({ params }: { params: { id: string } }) {
-    const { id } = await params;
+type Params = Promise<{ id: string }>
+
+export default async function Page(props: { params: Params }) {
+    const { id } = await props.params;
     const files = await getFilesBySubjectId(id);
 
     return (

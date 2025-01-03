@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { cosineSimilarity, embed, generateText, Message, streamText } from 'ai'
 import { providers } from '@/lib/ai-providers'
 import { google } from '@ai-sdk/google'

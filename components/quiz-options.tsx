@@ -8,7 +8,6 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { File } from "@/lib/db/types";
 import { Upload } from "lucide-react";
-import { motion } from "framer-motion";
 
 export default function QuizOptions({ files, onSubmit }: { files: File[], onSubmit: (data: { filesid: number[], numQuestions: number }) => void }) {
   const [isFileModalOpen, setIsFileModalOpen] = useState(false);
@@ -27,7 +26,7 @@ export default function QuizOptions({ files, onSubmit }: { files: File[], onSubm
               onSubmit={(e) => {
                 e.preventDefault();
                 if (files.length === 0) return;
-                onSubmit({ filesid: selectedFiles.map(file => file.id!), numQuestions });
+                onSubmit({ filesid: selectedFiles.map(file => Number(file.id!)), numQuestions });
               }}
             >
               <Button
