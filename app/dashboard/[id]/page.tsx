@@ -21,7 +21,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             <h2 className="text-lg font-semibold">Material teorico</h2>
             <NewItemButton folderId={id} />
           </div>
-          <FolderContentList content={[...folder.files, ...folder.subfolders]} />
+          <FolderContentList folders={folder.subfolders} files={folder.files} />
         </div>
       </div>
     </main>

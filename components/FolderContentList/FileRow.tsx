@@ -34,7 +34,7 @@ export function FileRow({ file }: { file: FileType }) {
       size={file.size}
       createdAt={file.createdAt}
       createdBy={file.createdBy}
-      handleDoubleClick={() => {/* TODO: open file */}}
+      handleDoubleClick={() => {/* TODO: open file */ }}
       handleDelete={handleDelete}
     />
   )

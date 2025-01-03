@@ -26,23 +26,11 @@ export function Row({ Icon, id, name, size, createdAt, createdBy, handleDoubleCl
         {name}
       </TableCell>
 
-      <TableCell>
-        {size
-          ? (size / (1024 * 1024)).toFixed(2) + "MB"
-          : ""}
-      </TableCell>
+      <TableCell>{size && (size / (1024 * 1024)).toFixed(2) + "MB"}</TableCell>
 
-      <TableCell>
-        {createdAt
-          ? createdAt?.toDateString()
-          : "--/--/----"}
-      </TableCell>
+      <TableCell>{createdAt?.toDateString()}</TableCell>
 
-      <TableCell>
-        {createdBy
-          ? <div className="flex items-center gap-2">{createdBy}</div>
-          : null}
-      </TableCell>
+      <TableCell>{createdBy}</TableCell>
 
       <TableCell>
         <DropdownMenu>
