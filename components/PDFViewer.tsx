@@ -31,7 +31,7 @@ export const PDFViewer: React.FC = () => {
     setPageNumber(1)
   }
 
-  const onDocumentError = (error: Error) => {
+  const onDocumentError = () => {
     toast({
         title: "Error",
         description: "No se pudo abrir el archivo. Por favor, intente de nuevo.",

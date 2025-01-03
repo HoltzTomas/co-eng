@@ -6,13 +6,13 @@ import { CoreMessage, streamObject } from "ai";
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
-  const { filesid, numQuestions, prompt }: { filesid: string[], numQuestions: number, prompt: string } = await req.json();
+  const { filesid, numQuestions }: { filesid: string[], numQuestions: number, prompt: string } = await req.json();
   
   if (filesid.length === 0) return new Response("No files selected", { status: 400 });
   if (numQuestions < 1 || numQuestions > 20) return new Response("Invalid number of questions", { status: 400 });
   const files = await getFilesById(filesid);
 
-  let documents: CoreMessage[] = [];
+  const documents: CoreMessage[] = [];
   for (const file of files) {
     const fileChunks = await getRandomChunksByFileId(file.id, 10);
     const chunk = fileChunks.map((chunk) => chunk.content).join(" - CHUNK CHANGE - ");

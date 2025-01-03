@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/hooks/use-toast'
 import { File as FileInfo } from '@/lib/db/types'
 
-export function UploadButton({ subjectId, ...props }: { subjectId: string, [key: string]: any }) {
+export function UploadButton({ subjectId, ...props }: { subjectId: string }) {
   const [isUploading, setIsUploading] = useState(false)
   const { user } = useUser()
   const fileInputRef = useRef<HTMLInputElement>(null)

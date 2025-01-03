@@ -16,7 +16,7 @@ import Markdown from 'react-markdown';
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
-export function ChatWithFiles({ files }: { files: File[] }) {
+export function ChatWithFiles({ files, subject }: { files: File[], subject: string }) {
   const { messages, input, handleInputChange, handleSubmit, error, reload, isLoading } = useChat({
     body: { filesid: files.map((file) => file.id) },
     api: '/api/ask-documents',
@@ -114,6 +114,7 @@ export function ChatWithFiles({ files }: { files: File[] }) {
         </form>
       </Card>
       <FileSelectionModal
+        subject={subject}
         isOpen={isFileModalOpen}
         onClose={() => setIsFileModalOpen(false)}
         onFilesSelect={setSelectedFiles}

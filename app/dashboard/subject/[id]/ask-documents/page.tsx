@@ -9,7 +9,7 @@ type Params = Promise<{ id: string }>
     return (
       <main className="flex-1 overflow-auto bg-gray-100">
         <div className="container mx-auto p-6 space-y-4 h-full">
-          <ChatWithFiles files={files} />
+          <ChatWithFiles files={files} subject={id} />
         </div>
       </main>
     );
