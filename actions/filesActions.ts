@@ -5,9 +5,10 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter"
 import { google } from "@ai-sdk/google"
 import { embedMany } from "ai"
 
-import { createFile, insertChunks, deleteFile as deleteFileDB } from "@/lib/db/queries"
+import { createFile, insertChunks, deleteFile as deleteFileDB, updateFile } from "@/lib/db/queries"
 import { File as FileInfo, Chunk } from "@/lib/db/types"
 import { revalidatePath } from "next/cache";
+import { createClient } from '@/lib/supabase/server';
 
 export async function uploadFile(data: FormData) {
   const file = data.get("file") as File;
@@ -15,11 +16,9 @@ export async function uploadFile(data: FormData) {
   if (!file || !fileInfoStr) return;
   const fileInfo: FileInfo = JSON.parse(fileInfoStr);
 
+  const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 })
   const pdfBuffer = Buffer.from(await file.arrayBuffer());
   const pdfContent = (await pdfParse(pdfBuffer)).text;
-
-  const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 })
-
   const chunkedContent = await textSplitter.createDocuments([pdfContent]);
 
   const { embeddings } = await embedMany({
@@ -28,6 +27,16 @@ export async function uploadFile(data: FormData) {
   })
 
   const createdFile = await createFile(fileInfo);
+
+  const supabase = await createClient();
+  const upload = await supabase.storage.from("files").upload(`${createdFile.userId}/${createdFile.id}`, file);
+  
+  if (!upload.error) {
+    createdFile.url = supabase.storage.from("files").getPublicUrl(upload.data.path).data.publicUrl;
+    await updateFile(createdFile);
+  } else {
+    console.error(upload.error);
+  }
 
   const chunks: Chunk[] = chunkedContent.map((chunk, index) => ({
     content: chunk.pageContent,

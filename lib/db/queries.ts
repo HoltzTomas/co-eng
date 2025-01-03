@@ -58,6 +58,7 @@ export async function getSubjectWithFiles(id: string) {
         subjectId: file.subjectId,
         createdBy: file.createdBy,
         createdAt: file.createdAt,
+        url: file.url
       })),
   };
 
@@ -93,6 +94,17 @@ export async function createFile(file: File) {
     .insert(files)
     .values(file)
     .returning();
+  return createdFile;
+}
+
+export async function updateFile(file: File) {
+  if (file.id === undefined) {
+    throw new Error('File id is required to update a file');
+  }
+  const [createdFile] = await db
+    .update(files)
+    .set(file)
+    .where(eq(files.id, file.id))
   return createdFile;
 }
 

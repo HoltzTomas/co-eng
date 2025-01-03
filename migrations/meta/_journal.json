@@ -8,6 +8,20 @@
       "when": 1735606562032,
       "tag": "0000_wet_wolfsbane",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1735931661682,
+      "tag": "0001_narrow_proemial_gods",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735932606960,
+      "tag": "0002_clear_jane_foster",
+      "breakpoints": true
     }
   ]
 }

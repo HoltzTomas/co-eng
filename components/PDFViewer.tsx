@@ -22,9 +22,9 @@ export const PDFViewer: React.FC = () => {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
 
-  if (!file || !file.name.endsWith("pdf")) return <></>;
+  if (!file || !file.url || !file.name.endsWith("pdf")) return <></>;
   
-  const fileURL = "https://cdn.filestackcontent.com/wcrjf9qPTCKXV3hMXDwK";
+  const fileURL = file.url;
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages)
