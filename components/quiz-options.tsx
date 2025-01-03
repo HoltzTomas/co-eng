@@ -26,7 +26,7 @@ export default function QuizOptions({ files, subject, onSubmit }: { files: File[
               onSubmit={(e) => {
                 e.preventDefault();
                 if (files.length === 0) return;
-                onSubmit({ filesid: selectedFiles.map(file => file.id!), numQuestions });
+                onSubmit({ filesid: selectedFiles.map(file => Number(file.id!)), numQuestions });
               }}
             >
               <Button

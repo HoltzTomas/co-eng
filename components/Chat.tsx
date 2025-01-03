@@ -9,7 +9,7 @@ import { Message } from "@/components/Message"
 import Typewriter from "./ui/text-animations";
 
 export function Chat({ id }: { id: string }) {
-  const { messages, input, handleInputChange, handleSubmit, error, reload, isLoading } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, error, reload } = useChat({
     body: { provider: 'gemini' }
   });
 

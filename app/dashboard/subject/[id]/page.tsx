@@ -6,8 +6,10 @@ import { UploadButton } from "@/components/upload-button";
 
 import { getSubjectWithFiles } from "@/lib/db/queries"
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const { id } = await params
+type Params = Promise<{ id: string }>
+
+export default async function Page({ params }: { params: Params}) {
+  const { id } = await params;
 
   const subject = await getSubjectWithFiles(id);
   if (!subject) redirect("/dashboard");

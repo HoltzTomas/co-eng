@@ -27,7 +27,7 @@ export default function SignInPage() {
               </g>
             </svg>
             <h1 className="mt-4 text-xl font-medium tracking-tight text-white">
-              Sign in to Co Eng
+              Sign in to Notes Studio
             </h1>
           </header>
           <Clerk.GlobalError className="block text-sm text-red-400" />

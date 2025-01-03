@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { useState, useRef } from 'react'
@@ -33,13 +34,13 @@ export function UploadButton({ subjectId, ...props }: { subjectId: string, [key:
       await uploadFile(formData)
       toast({
         title: "Éxito",
-        description: "Archivo subido correctamente.",
+        description: "Archivo subido correctamente."
       })
-    } catch (error) {
+    } catch (error: unknown) {
       toast({
-        title: "Error",
+        title: "Error", 
         description: "No se pudo crear el archivo. Por favor, intente de nuevo.",
-        variant: "destructive",
+        variant: "destructive"
       })
     } finally {
       setIsUploading(false)

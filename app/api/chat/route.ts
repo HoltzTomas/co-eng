@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { streamText } from 'ai'
 import { providers, ProviderName } from '@/lib/ai-providers'
 
