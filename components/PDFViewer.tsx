@@ -1,33 +1,57 @@
 'use client'
 
+import "react-pdf/dist/esm/Page/TextLayer.css"
+import "react-pdf/dist/esm/Page/AnnotationLayer.css"
+
 import React from 'react'
 import { useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { usePDFViewer } from '../contexts/PDFViewerContext'
+import { useFileViewer } from '@/hooks/use-fileviewer'
+import { toast } from '@/hooks/use-toast'
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url,
+).toString();
 
 export const PDFViewer: React.FC = () => {
-  const { isOpen, closePDF, pdfUrl } = usePDFViewer()
+  const { file, close } = useFileViewer()
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
+
+  const fileURL = "https://cdn.filestackcontent.com/wcrjf9qPTCKXV3hMXDwK";
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages)
     setPageNumber(1)
   }
 
+  const onDocumentError = (error: Error) => {
+    toast({
+        title: "Error",
+        description: "No se pudo abrir el archivo. Por favor, intente de nuevo.",
+        variant: "destructive",
+    })
+    close()
+  }
+
+  const onOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      close()
+    }
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={closePDF}>
+    <Dialog open={!!file} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>PDF Viewer</DialogTitle>
         </DialogHeader>
-        <div className="max-h-[80vh] overflow-auto">
-          {pdfUrl && (
-            <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
+        <div className="max-h-[70vh] overflow-auto">
+          {fileURL && (
+            <Document className="flex justify-center" file={fileURL} onLoadSuccess={onDocumentLoadSuccess} onLoadError={onDocumentError}>
               <Page pageNumber={pageNumber} />
             </Document>
           )}

@@ -20,19 +20,17 @@ import { toast } from "@/hooks/use-toast"
 import { deleteFile } from "@/actions/filesActions"
 import { useState } from 'react'
 import clsx from 'clsx'
-import { usePDFViewer } from '@/contexts/PDFViewerContext'
+import { fileViewer } from '@/hooks/use-fileviewer'
 
 export function FileList({ files }: { files: File[] }) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const { openPDF } = usePDFViewer();
 
   const handleClick = (file: File) => {
     setSelectedFile(file);
   }
 
   const handleDoubleClick = (file: File) => {
-    console.log("Opening file:", file.name)
-    
+    fileViewer(file);
   }
 
   const handleDelete = async (file: File) => {
