@@ -50,6 +50,7 @@ export async function getFolderWithContent(id: string) {
   // Combine them
   return {
     id: folder.id,
+    parentId: folder.parentId,
     name: folder.name,
     userId: folder.userId,
     createdAt: folder.createdAt,
