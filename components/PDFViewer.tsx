@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button'
 import { useFileViewer } from '@/hooks/use-fileviewer'
 import { toast } from '@/hooks/use-toast'
+import { OnItemClickArgs } from "react-pdf/dist/esm/shared/types.js"
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -21,6 +22,8 @@ export const PDFViewer: React.FC = () => {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [pageNumber, setPageNumber] = useState(1)
 
+  if (!file || !file.name.endsWith("pdf")) return <></>;
+  
   const fileURL = "https://cdn.filestackcontent.com/wcrjf9qPTCKXV3hMXDwK";
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -43,6 +46,12 @@ export const PDFViewer: React.FC = () => {
     }
   }
 
+  const onItemClick = (item: OnItemClickArgs) => {
+    if (item.dest) {
+      setPageNumber(item.pageIndex + 1)
+    }
+  }
+
   return (
     <Dialog open={!!file} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl">
@@ -51,7 +60,7 @@ export const PDFViewer: React.FC = () => {
         </DialogHeader>
         <div className="max-h-[70vh] overflow-auto">
           {fileURL && (
-            <Document className="flex justify-center" file={fileURL} onLoadSuccess={onDocumentLoadSuccess} onLoadError={onDocumentError}>
+            <Document className="flex justify-center" file={fileURL} onItemClick={onItemClick} onLoadSuccess={onDocumentLoadSuccess} onLoadError={onDocumentError}>
               <Page pageNumber={pageNumber} />
             </Document>
           )}
