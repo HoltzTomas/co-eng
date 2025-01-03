@@ -1,6 +1,5 @@
-import { Book, Home, Plus, MoreVertical, Trash } from "lucide-react"
+import { Folder, Home, Plus, MoreVertical, Trash } from "lucide-react"
 import Link from 'next/link'
-import { revalidatePath } from "next/cache"
 import { currentUser } from '@clerk/nextjs/server'
 import { SignOutButton } from "@clerk/nextjs"
 import {
@@ -18,44 +17,36 @@ import {
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent } from "@/components/ui/dropdown-menu"
 
-import { createSubject, deleteSubject, getSubjects } from "@/lib/db/queries"
+import { getRootFolders } from "@/lib/db/queries"
+import { createFolderAction, deleteFolderAction } from "@/actions/foldersActions"
 
 
 export async function Sidebar() {
   const user = await currentUser()
   const userId: string = user!.id;
-  const subjects = await getSubjects(userId);
-
-  const handleAddSubject = async (formData: FormData) => {
-    "use server"
-    const subject: string = formData.get("subject")?.toString().trim() || "";
-    if (!subject) return;
-    await createSubject({name: subject, userId: userId});
-    revalidatePath("/dashboard");
-  }
-
-  const handleDeleteSubject = async (subjectId: string) => {
-    "use server"
-    await deleteSubject(subjectId);
-    revalidatePath("/dashboard");
-  }
+  const folders = await getRootFolders(userId);
 
   return (
     <ShadcnSidebar className="w-64 border-r border-gray-200">
       <SidebarHeader className="p-4 border-b flex flex-row">
-            <Home className="mr-2 h-4 w-4" />
-            <span>Notes Studio</span>
+        <Home className="mr-2 h-4 w-4" />
+        <span>Notes Studio</span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="px-4 py-2 text-sm font-semibold text-gray-600">
-            Mis Materias
+            Mis Carpetas
           </SidebarGroupLabel>
-          <form className="flex items-center px-4 py-2" action={handleAddSubject}>
+          <form className="flex items-center px-4 py-2" action={async (formData) => {
+            "use server"
+            const name: string = formData.get("name")?.toString().trim() || "";
+            if (!name) return;
+            await createFolderAction(name);
+          }}>
             <input
               type="text"
-              name="subject"
-              placeholder="Nueva Materia"
+              name="name"
+              placeholder="Nueva Carpeta"
               className="flex-1 text-sm border rounded-md px-2 py-1 mr-2"
               required
             />
@@ -67,12 +58,12 @@ export async function Sidebar() {
           </form>
           <SidebarGroupContent>
             <SidebarMenu>
-              {subjects.map((subject) => (
-                <SidebarMenuItem key={subject.id}>
-                  <Link href={`/dashboard/subject/${subject.id}`} passHref className="w-full">
+              {folders.map((folder) => (
+                <SidebarMenuItem key={folder.id}>
+                  <Link href={`/dashboard/${folder.id}`} passHref className="w-full">
                     <SidebarMenuButton className="flex items-center w-full text-sm hover:bg-gray-100">
-                      <Book className="mr-2 h-4 w-4" />
-                      <span>{subject.name}</span>
+                      <Folder className="mr-2 h-4 w-4" />
+                      <span>{folder.name}</span>
                     </SidebarMenuButton>
                   </Link>
                   <DropdownMenu>
@@ -83,7 +74,10 @@ export async function Sidebar() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuItem asChild>
-                        <form action={handleDeleteSubject.bind(null, subject.id)}>
+                        <form action={async () => {
+                          "use server"
+                          await deleteFolderAction(folder.id)
+                        }}>
                           <button className="flex w-full items-center text-red-600">
                             <Trash className="mr-2 h-4 w-4" />
                             Delete
@@ -91,7 +85,7 @@ export async function Sidebar() {
                         </form>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
-                  </DropdownMenu> 
+                  </DropdownMenu>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

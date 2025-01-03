@@ -9,7 +9,7 @@ import { Input } from "./ui/input";
 import { File } from "@/lib/db/types";
 import { Upload } from "lucide-react";
 
-export default function QuizOptions({ files, onSubmit }: { files: File[], onSubmit: (data: { filesid: number[], numQuestions: number }) => void }) {
+export default function QuizOptions({ files, onSubmit }: { files: File[], onSubmit: (data: { filesid: string[], numQuestions: number }) => void }) {
   const [isFileModalOpen, setIsFileModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [numQuestions, setNumQuestions] = useState(5);
