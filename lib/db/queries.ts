@@ -170,7 +170,7 @@ export async function deleteFolder(id: string) {
         UNION ALL
         SELECT f.id
         FROM "folders" f
-        INNER JOIN subfolders sf ON f.parentId = sf.id
+        INNER JOIN subfolders sf ON f."parentId" = sf.id
       )
       DELETE FROM "chunks"
       WHERE "fileId" IN (
@@ -189,7 +189,7 @@ export async function deleteFolder(id: string) {
         UNION ALL
         SELECT f.id
         FROM "folders" f
-        INNER JOIN subfolders sf ON f.parentId = sf.id
+        INNER JOIN subfolders sf ON f."parentId" = sf.id
       )
       DELETE FROM "files"
       WHERE "folderId" IN (SELECT id FROM subfolders);
@@ -204,7 +204,7 @@ export async function deleteFolder(id: string) {
         UNION ALL
         SELECT f.id
         FROM "folders" f
-        INNER JOIN subfolders sf ON f.parentId = sf.id
+        INNER JOIN subfolders sf ON f."parentId" = sf.id
       )
       DELETE FROM "folders"
       WHERE id IN (SELECT id FROM subfolders);
