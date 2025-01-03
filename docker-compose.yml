@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:latest
-    container_name: co-eng-db
+    container_name: note-studio-db
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}

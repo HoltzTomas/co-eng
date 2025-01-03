@@ -1,8 +1,8 @@
-# Co-Eng
+# Note-Studio
 
 ## 📖 Descripción
 
-**Co-Eng** es una aplicación diseñada para simplificar el proceso de aprendizaje mediante herramientas impulsadas por inteligencia artificial. Está enfocada en mejorar la eficiencia y el rendimiento académico de estudiantes universitarios.
+**Note-Studio** es una aplicación diseñada para simplificar el proceso de aprendizaje mediante herramientas impulsadas por inteligencia artificial. Está enfocada en mejorar la eficiencia y el rendimiento académico de estudiantes universitarios.
 
 ## 🛠 Tecnologías Utilizadas
 
