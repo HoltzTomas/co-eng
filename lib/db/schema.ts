@@ -1,26 +1,27 @@
-import { pgTable, text, timestamp, real, integer, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, real, integer, uuid, AnyPgColumn } from 'drizzle-orm/pg-core';
 
-export const subjects = pgTable('subjects', {
+export const folders = pgTable('folders', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   name: text('name').notNull(),
-  userId: text('user_id').notNull(),  // User id
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  parentId: uuid('parentId').references((): AnyPgColumn => folders.id),
+  userId: text('userId').notNull(),  // User id
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
 });
 
 export const files = pgTable('files', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   name: text('name').notNull(),
-  subjectId: uuid('subject_id').notNull().references(() => subjects.id),
+  folderId: uuid('folderId').notNull().references(() => folders.id),
   size: integer("size").notNull(),
-  userId: text('user_id').notNull(),  // User id
-  createdBy: text('created_by').notNull(),  // Email address
-  createdAt: timestamp('created_at').notNull().defaultNow(),
+  userId: text('userId').notNull(),  // User id
+  createdBy: text('createdBy').notNull(),  // Email address
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
 });
 
-export const chunk = pgTable("chunk", {
+export const chunks = pgTable("chunks", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
-  fileId: uuid("file_id").notNull().references(() => files.id),
-  chunkNumber: integer("chunk_number").notNull(),
+  fileId: uuid("fileId").notNull().references(() => files.id),
+  chunkNumber: integer("chunkNumber").notNull(),
   content: text("content").notNull(),
   embedding: real("embedding").array().notNull(),
 });

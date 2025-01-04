@@ -1,4 +1,4 @@
-import {  getRandomChunksByFileId } from "@/lib/db/queries";
+import { getRandomChunksByFileId } from "@/lib/db/queries";
 import { questionSchema, questionsSchema } from "@/lib/schemas/quiz";
 import { google } from "@ai-sdk/google";
 import { CoreMessage, streamObject } from "ai";
@@ -6,7 +6,7 @@ import { CoreMessage, streamObject } from "ai";
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
-  const { filesid, numQuestions }: { filesid: number[], numQuestions: number } = await req.json();
+  const { filesid, numQuestions }: { filesid: string[], numQuestions: number } = await req.json();
 
   if (filesid.length === 0) return new Response("No files selected", { status: 400 });
   if (numQuestions < 1 || numQuestions > 20) return new Response("Invalid number of questions", { status: 400 });

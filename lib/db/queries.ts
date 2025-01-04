@@ -1,123 +1,141 @@
 "use server"
-import { eq, asc, inArray, sql } from 'drizzle-orm';
+import { eq, and, asc, sql, isNull } from 'drizzle-orm';
 import { db } from './db';
-import { subjects, files, chunk } from './schema';
-import { Subject, File, Chunk } from './types';
+import { folders, files, chunks } from './schema';
+import { Folder, File, Chunk } from './types';
 
-export async function createSubject(subject: Subject) {
-  const [createdSubject] = await db
-    .insert(subjects)
-    .values(subject)
+export async function createFolder(folder: Folder) {
+  const [createdFolder] = await db
+    .insert(folders)
+    .values(folder)
     .returning();
-  return createdSubject;
+  return createdFolder;
 }
 
-export async function getSubjects(userId: string) {
-  const subjectsList = await db
+export async function getRootFolders(userId: string) {
+  const foldersList = await db
     .select()
-    .from(subjects)
-    .where(eq(subjects.userId, userId));
-  return subjectsList;
+    .from(folders)
+    .where(and(
+      eq(folders.userId, userId),
+      isNull(folders.parentId)
+    ));
+  return foldersList;
 }
 
-export async function getSubjectById(id: string) {
-  const [subject] = await db
+export async function getFolderWithContent(id: string) {
+  // Fetch the main folder
+  const folderResult = await db
     .select()
-    .from(subjects)
-    .where(eq(subjects.id, id));
-  return subject;
-}
+    .from(folders)
+    .where(eq(folders.id, id));
 
-export async function getSubjectWithFiles(id: string) {
-  const result = await db
-    .select({
-      subject: subjects,
-      file: files,
-    })
-    .from(subjects)
-    .leftJoin(files, eq(files.subjectId, subjects.id))
-    .where(eq(subjects.id, id));
-
-  if (result.length === 0) {
+  if (folderResult.length === 0) {
     return null;
   }
+  const folder = folderResult[0];
 
-  const subjectWithFiles = {
-    id: result[0].subject.id,
-    name: result[0].subject.name,
-    userId: result[0].subject.userId,
-    createdAt: result[0].subject.createdAt,
-    files: result
-      .map(row => row.file)
-      .filter(file => file !== null)
-      .map(file => ({
-        id: file.id,
-        name: file.name,
-        size: file.size,
-        userId: file.userId,
-        subjectId: file.subjectId,
-        createdBy: file.createdBy,
-        createdAt: file.createdAt,
-      })),
+  // Fetch all immediate subfolders
+  const subfolderResults = await db
+    .select()
+    .from(folders)
+    .where(eq(folders.parentId, id));
+
+  // Fetch all files in this folder
+  const fileResults = await db
+    .select()
+    .from(files)
+    .where(eq(files.folderId, id));
+
+  // Combine them
+  return {
+    id: folder.id,
+    parentId: folder.parentId,
+    name: folder.name,
+    userId: folder.userId,
+    createdAt: folder.createdAt,
+    subfolders: subfolderResults.map(sf => ({
+      id: sf.id,
+      name: sf.name,
+      parentId: sf.parentId,
+      userId: sf.userId,
+      createdAt: sf.createdAt,
+    })),
+    files: fileResults.map(f => ({
+      id: f.id,
+      name: f.name,
+      size: f.size,
+      userId: f.userId,
+      folderId: f.folderId,
+      createdBy: f.createdBy,
+      createdAt: f.createdAt,
+    })),
   };
-
-  return subjectWithFiles;
 }
 
-export async function getFilesById(ids: string[]) {
-  const filesList = await db
-    .select()
-    .from(files)
-    .where(inArray(files.id, ids));
-  return filesList;
+export async function getFilesByFolderId(id: string) {
+  const rows = await db.execute<File>(sql`
+    WITH RECURSIVE subfolders AS (
+      SELECT id
+      FROM "folders"
+      WHERE id = ${id}
+      UNION ALL
+      SELECT f.id
+      FROM "folders" f
+      JOIN subfolders sf ON f."parentId" = sf.id
+    )
+    SELECT *
+    FROM "files"
+    WHERE "folderId" IN (SELECT id FROM subfolders)
+  `);
+ 
+  // Tuve que parsear la fecha de creación porque Drizzle no lo hace por defecto (se devuelve como string) atte: j
+  return rows;
 }
 
-export async function getFilesBySubjectId(id: string) {
-  const filesList = await db
-    .select()
-    .from(files)
-    .where(eq(files.subjectId, id));
-  return filesList;
-}
+export async function createFileAndChunks(
+  fileInfo: File,
+  chunkedContent: Array<{ pageContent: string }>,
+  embeddings: number[][]
+) {
+  return await db.transaction(async (tx) => {
+    // Insert the file
+    const [createdFile] = await tx
+      .insert(files)
+      .values(fileInfo)
+      .returning();
 
-export async function getFilesByUserId(userId: string) {
-  const filesList = await db
-    .select()
-    .from(files)
-    .where(eq(files.userId, userId));
-  return filesList;
-}
+    // Build chunk rows
+    const chunkRows: Chunk[] = chunkedContent.map((chunk, index) => ({
+      content: chunk.pageContent,
+      embedding: embeddings[index],
+      chunkNumber: index,
+      fileId: createdFile.id,
+    }));
 
-export async function createFile(file: File) {
-  const [createdFile] = await db
-    .insert(files)
-    .values(file)
-    .returning();
-  return createdFile;
-}
+    // Insert chunks if any
+    if (chunkRows.length > 0) {
+      await tx.insert(chunks).values(chunkRows);
+    }
 
-export async function insertChunks(chunks: Chunk[]) {
-  const [createdChunks] = await db
-    .insert(chunk)
-    .values(chunks)
-    .returning();
-  return createdChunks;
+    return createdFile;
+  });
 }
 
 export async function getChunksByFileId(id: string) {
   const chunksList = await db
     .select()
-    .from(chunk)
-    .where(eq(chunk.fileId, id))
-    .orderBy(asc(chunk.chunkNumber));
+    .from(chunks)
+    .where(eq(chunks.fileId, id))
+    .orderBy(asc(chunks.chunkNumber));
   return chunksList;
 }
 
-export async function getRandomChunksByFileId(id: number, limit: number) {
+export async function getRandomChunksByFileId(id: string, limit: number) {
   const chunksList = await db
     .select()
-    .from(chunk)
-    .where(eq(chunk.fileId, id.toString()))
+    .from(chunks)
+    .where(eq(chunks.fileId, id))
     .orderBy(sql`RANDOM()`)
     .limit(limit);
   return chunksList;
@@ -125,19 +143,64 @@ export async function getRandomChunksByFileId(id: number, limit: number) {
 
 
 export async function deleteFile(id: string) {
-  await db
-    .delete(files)
-    .where(eq(files.id, id));
+  await db.transaction(async (tx) => {
+    // Delete all chunks belonging to this file
+    await tx.delete(chunks).where(eq(chunks.fileId, id));
+
+    // Delete the file
+    await tx.delete(files).where(eq(files.id, id));
+  });
 }
 
-export async function deleteSubject(id: string) {
-  await db
-    .delete(subjects)
-    .where(eq(subjects.id, id));
-}
+export async function deleteFolder(id: string) {
+  await db.transaction(async (tx) => {
+    // Remove all chunks associated with files in this folder and its subfolders
+    await tx.execute(sql`
+      WITH RECURSIVE subfolders AS (
+        SELECT id
+        FROM "folders"
+        WHERE id = ${id}
+        UNION ALL
+        SELECT f.id
+        FROM "folders" f
+        INNER JOIN subfolders sf ON f."parentId" = sf.id
+      )
+      DELETE FROM "chunks"
+      WHERE "fileId" IN (
+        SELECT id
+        FROM "files"
+        WHERE "folderId" IN (SELECT id FROM subfolders)
+      );
+    `);
 
-export async function deleteChunksByFileId(id: string) {
-  await db
-    .delete(chunk)
-    .where(eq(chunk.fileId, id));
+    // Remove all files in this folder and its subfolders
+    await tx.execute(sql`
+      WITH RECURSIVE subfolders AS (
+        SELECT id
+        FROM "folders"
+        WHERE id = ${id}
+        UNION ALL
+        SELECT f.id
+        FROM "folders" f
+        INNER JOIN subfolders sf ON f."parentId" = sf.id
+      )
+      DELETE FROM "files"
+      WHERE "folderId" IN (SELECT id FROM subfolders);
+    `);
+
+    // Remove all folders (target folder + its subfolders)
+    await tx.execute(sql`
+      WITH RECURSIVE subfolders AS (
+        SELECT id
+        FROM "folders"
+        WHERE id = ${id}
+        UNION ALL
+        SELECT f.id
+        FROM "folders" f
+        INNER JOIN subfolders sf ON f."parentId" = sf.id
+      )
+      DELETE FROM "folders"
+      WHERE id IN (SELECT id FROM subfolders);
+    `);
+  });
 }

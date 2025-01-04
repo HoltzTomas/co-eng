@@ -1,8 +1,8 @@
-import type { subjects, files, chunk } from './schema';
+import type { folders, files, chunks } from './schema';
 import type { InferInsertModel } from 'drizzle-orm';
 
-export type Subject = InferInsertModel<typeof subjects>;
+export type Folder = InferInsertModel<typeof folders>;
 
 export type File = InferInsertModel<typeof files>;
 
-export type Chunk = InferInsertModel<typeof chunk>;
+export type Chunk = InferInsertModel<typeof chunks>;

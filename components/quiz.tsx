@@ -16,22 +16,23 @@ export default function Quiz({ files }: { files: File[] }) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [numQuestions, setNumQuestions] = useState(5);
   const { submit, object: partialQuestions, isLoading } = experimental_useObject({
-      api: "/api/generate-quiz",
-      schema: questionsSchema,
-      initialValue: undefined,
-      onError: (error) => {
-          toast({
-              title: "Error",
-              description: "No se pudo generar el quiz. Por favor, intente de nuevo.",
-              variant: "destructive",
-          })
-      },
-      onFinish: ({ object }) => {
-          if (object && object.length > 0) {
-              setQuestions(object);
-              console.log(object);
-          }
-      },
+    api: "/api/generate-quiz",
+    schema: questionsSchema,
+    initialValue: undefined,
+    onError: (error) => {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "No se pudo generar el quiz. Por favor, intente de nuevo.",
+        variant: "destructive",
+      })
+    },
+    onFinish: ({ object }) => {
+      if (object && object.length > 0) {
+        setQuestions(object);
+        console.log(object);
+      }
+    },
   });
 
   if (questions.length === 0) {
@@ -75,7 +76,7 @@ export default function Quiz({ files }: { files: File[] }) {
   }
   else {
     return (
-      <QuizPlayer questions={questions} onReset={() => {setQuestions([])}} />
+      <QuizPlayer questions={questions} onReset={() => { setQuestions([]) }} />
     )
   }
 }

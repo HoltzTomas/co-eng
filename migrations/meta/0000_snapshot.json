@@ -1,11 +1,11 @@
 {
-  "id": "a521d629-5264-40d0-b726-ae9616324ca8",
+  "id": "0554fea5-85d1-40ae-bf19-f3f6caec5feb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.chunk": {
-      "name": "chunk",
+    "public.chunks": {
+      "name": "chunks",
       "schema": "",
       "columns": {
         "id": {
@@ -15,14 +15,14 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "file_id": {
-          "name": "file_id",
+        "fileId": {
+          "name": "fileId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "chunk_number": {
-          "name": "chunk_number",
+        "chunkNumber": {
+          "name": "chunkNumber",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -42,12 +42,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "chunk_file_id_files_id_fk": {
-          "name": "chunk_file_id_files_id_fk",
-          "tableFrom": "chunk",
+        "chunks_fileId_files_id_fk": {
+          "name": "chunks_fileId_files_id_fk",
+          "tableFrom": "chunks",
           "tableTo": "files",
           "columnsFrom": [
-            "file_id"
+            "fileId"
           ],
           "columnsTo": [
             "id"
@@ -79,8 +79,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "subject_id": {
-          "name": "subject_id",
+        "folderId": {
+          "name": "folderId",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -91,20 +91,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "created_by": {
-          "name": "created_by",
+        "createdBy": {
+          "name": "createdBy",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -113,12 +113,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "files_subject_id_subjects_id_fk": {
-          "name": "files_subject_id_subjects_id_fk",
+        "files_folderId_folders_id_fk": {
+          "name": "files_folderId_folders_id_fk",
           "tableFrom": "files",
-          "tableTo": "subjects",
+          "tableTo": "folders",
           "columnsFrom": [
-            "subject_id"
+            "folderId"
           ],
           "columnsTo": [
             "id"
@@ -133,8 +133,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.subjects": {
-      "name": "subjects",
+    "public.folders": {
+      "name": "folders",
       "schema": "",
       "columns": {
         "id": {
@@ -150,14 +150,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "parentId": {
+          "name": "parentId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -165,7 +171,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "folders_parentId_folders_id_fk": {
+          "name": "folders_parentId_folders_id_fk",
+          "tableFrom": "folders",
+          "tableTo": "folders",
+          "columnsFrom": [
+            "parentId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
