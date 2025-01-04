@@ -74,7 +74,7 @@ export async function getFolderWithContent(id: string) {
 }
 
 export async function getFilesByFolderId(id: string) {
-  const rows = await db.execute(sql`
+  const rows = await db.execute<File>(sql`
     WITH RECURSIVE subfolders AS (
       SELECT id
       FROM "folders"
@@ -90,14 +90,7 @@ export async function getFilesByFolderId(id: string) {
   `);
  
   // Tuve que parsear la fecha de creación porque Drizzle no lo hace por defecto (se devuelve como string) atte: j
-  const parsedRows = rows.map((row) => {
-    return {
-      ...row,
-      createdAt: row.createdAt ? new Date(row.createdAt as string) : null,
-    };
-  });
-
-  return parsedRows;
+  return rows;
 }
 
 export async function createFileAndChunks(

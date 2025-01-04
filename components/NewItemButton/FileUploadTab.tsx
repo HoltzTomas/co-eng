@@ -54,6 +54,7 @@ export function FileUploadTab({ folderId, onSuccess }: FileUploadTabProps) {
       })
       onSuccess()
     } catch (error) {
+      console.error(error);
       toast({
         title: "Error",
         description: "No se pudo subir el archivo. Por favor, intente de nuevo.",

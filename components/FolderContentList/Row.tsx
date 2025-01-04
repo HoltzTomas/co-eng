@@ -1,12 +1,12 @@
 "use client"
-import { Trash, MoreVertical } from 'lucide-react'
+import { Trash, MoreVertical, type LucideIcon } from 'lucide-react'
 
 import { TableRow, TableCell } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 
 type RowProps = {
-  Icon: any
+  Icon: LucideIcon
   id: string
   name: string
   size?: number

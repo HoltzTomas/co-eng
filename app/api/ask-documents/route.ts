@@ -87,7 +87,7 @@ Helpful Answer:`
   })
 
   return result.toDataStreamResponse({
-    getErrorMessage: (_e) => {
+    getErrorMessage: () => {
       return "Something went wrong"
     }
   })

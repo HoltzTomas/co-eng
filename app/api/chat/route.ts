@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   })
   
   return result.toDataStreamResponse({
-    getErrorMessage: (e: unknown) => {
+    getErrorMessage: () => {
       return "Something went wrong"
     }
   })
