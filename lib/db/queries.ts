@@ -88,9 +88,11 @@ export async function getFilesByFolderId(id: string) {
     FROM "files"
     WHERE "folderId" IN (SELECT id FROM subfolders)
   `);
- 
-  // Tuve que parsear la fecha de creación porque Drizzle no lo hace por defecto (se devuelve como string) atte: j
-  return rows;
+ // Convert string dates to JavaScript Date objects
+  return rows.map(row => ({
+    ...row,
+    createdAt: new Date(row.createdAt!), // Convert to Date object
+  }));
 }
 
 export async function createFileAndChunks(
